@@ -6,6 +6,8 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
+
+@NamedQuery(name = "User.findByEmailId",query = "select u from  User u where u.email=:email")
 //this annotation is for handdle the getter and setter, I used it instead of constuctor, getter, setter, and class call
 @Data
 @Entity
