@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 //this is to printo some logs in our console
 @Slf4j
@@ -77,5 +78,30 @@ public class CategoryServiceImpl implements CategoryService {
             ex.printStackTrace();
         }
         return new ResponseEntity<List<Category>>(new ArrayList<>(), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @Override
+    public ResponseEntity<String> updateCategory(Map<String, String> requestMap) {
+        try{
+            if(jwtFilter.isAdmin()){
+                if(validateCategoryMap(requestMap, true)){
+                    Optional optional = categoryDao.findById(Integer.parseInt(requestMap.get("id")));
+//                    I used optional.isPresent() instead of !optional.isEmpty()
+                    if(!optional.isEmpty()){
+                        categoryDao.save(getCategoryFromMap(requestMap, true));
+                        return CafeUtils.getResponseEntity("Category Updated Succesfully", HttpStatus.OK);
+                    }
+                    else {
+                        return CafeUtils.getResponseEntity("Category id doesn't exist", HttpStatus.OK);
+                    }
+                }
+                return CafeUtils.getResponseEntity(CafeConstants.INVALID_DATA,HttpStatus.BAD_REQUEST);
+            }else{
+                return CafeUtils.getResponseEntity(CafeConstants.UNAUTHORIZED_ACCESS, HttpStatus.UNAUTHORIZED);
+            }
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return CafeUtils.getResponseEntity(CafeConstants.SOMETHING_WENT_WRONG, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
