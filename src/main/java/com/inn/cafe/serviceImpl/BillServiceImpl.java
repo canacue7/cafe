@@ -171,11 +171,6 @@ public class BillServiceImpl implements BillService {
         }else{
             list = billDao.getBillByUserName(jwtFilter.getCurrentUser());
         }
-        try {
-
-        }catch (Exception ex){
-            ex.printStackTrace();
-        }
         return new ResponseEntity<>(list,HttpStatus.OK);
     }
 }
