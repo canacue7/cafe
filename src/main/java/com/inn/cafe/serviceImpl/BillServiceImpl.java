@@ -219,7 +219,7 @@ public class BillServiceImpl implements BillService {
             Optional optional = billDao.findById(id);
             if(optional.isPresent()){
                 billDao.deleteById(id);
-                return new ResponseEntity<>("Bill Deleted successfully",HttpStatus.OK);
+                return CafeUtils.getResponseEntity("Bill Deleted successfully",HttpStatus.OK);
             }
             return CafeUtils.getResponseEntity("Bill id doesn't exist",HttpStatus.OK);
         }catch (Exception ex){
